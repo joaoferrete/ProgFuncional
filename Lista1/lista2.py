@@ -1,0 +1,6 @@
+print("CALCULADOR DO NºESIMO NUMERO DE UMA PG")
+a=int(input("Digite o primeiro termo: "))
+q=int(input("Digite a Razão: "))
+n=int(input("Digite n (O termo que deseja descobrir): "))
+an=a*(q**(n-1))
+print("O valor da PG no termo {} é {}".format(n,an))
