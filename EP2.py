@@ -11,7 +11,7 @@ def getNome():
     """
     Retorna o nome completo do aluno
     """
-    return "João Paulo Souza Ferrete" 
+    return "Joao Paulo Souza Ferrete" 
 
 def limpaTela(): 
 	if name == 'nt': 
