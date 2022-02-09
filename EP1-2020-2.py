@@ -94,7 +94,7 @@ def podeSacar(n100, n50, n20, n10, n5, n2, n1, total):
     elif total>0:
         return False
         
-    return podeSacar(n100, n50, n20, n10, n5, n2, n1, total, tentativa)
+    return podeSacar(n100, n50, n20, n10, n5, n2, n1, total)
 
 def saldo(n100, n50, n20, n10, n5, n2, n1):
     return (n100*100 + n50*50 + n20*20 + n10*10 + n5*5 + n2*2 + n1*1)
