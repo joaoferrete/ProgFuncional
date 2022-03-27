@@ -83,6 +83,17 @@ def verifGanhador(lista, simbolo):
     elif lista[3] == simbolo and lista[6] == simbolo and lista[9] == simbolo: return True
     return False
 
+def verifScore(lista, simbolo):
+    if lista[1] == simbolo and lista[2] == simbolo and lista[3] == simbolo: return 10
+    elif lista[4] == simbolo and lista[5] == simbolo and lista[6] == simbolo: return 10
+    elif lista[7] == simbolo and lista[8] == simbolo and lista[9] == simbolo: return 10
+    elif lista[1] == simbolo and lista[5] == simbolo and lista[9] == simbolo: return 10
+    elif lista[3] == simbolo and lista[5] == simbolo and lista[7] == simbolo: return 10
+    elif lista[1] == simbolo and lista[4] == simbolo and lista[7] == simbolo: return 10
+    elif lista[2] == simbolo and lista[5] == simbolo and lista[8] == simbolo: return 10
+    elif lista[3] == simbolo and lista[6] == simbolo and lista[9] == simbolo: return 10
+    return 0
+
 ###################################################################################
 #(6) Faça uma função que retorne True se houve empate e False, caso contrário.    #
 # Para isso, basta verificar se o tabuleiro está todo preenchido, ou seja, não    #
@@ -116,6 +127,34 @@ def posicaoLivre(lista):
 # sortear uma posição livre como sendo a jogada do computador. Use a função (7.2) #
 # Posteriormente, implemente alguma estratégia mais  "inteligente".               #
 ###################################################################################
+
+def minimax(tabuleiro, jogada, PC, simboloComputador):
+    simboloJogador = "X" if simboloComputador=="O" else "O"
+    
+    if(verifGanhador(tabuleiro, simboloComputador)): return 10
+    if(verifGanhador(tabuleiro, simboloJogador)): return -10
+    if verifEmpate(tabuleiro): return 0
+    vazios = posicaoVaga(tabuleiro)
+
+    if PC:
+        Jogada = -1000
+        for i in vazios:
+            tabuleiro[i] = simboloComputador
+            Jogada = max(Jogada, minimax(tabuleiro, jogada+1, False, simboloComputador))
+            tabuleiro[i] = " "
+        return Jogada
+    
+    else:
+        Jogada = 1000
+        for i in vazios:
+            tabuleiro[i] = simboloJogador
+            Jogada = min(Jogada, minimax(tabuleiro, jogada+1, True, simboloComputador))
+            tabuleiro[i] = " "
+        return Jogada
+    
+    
+
+
 def jogadaComputador(tabuleiro, simboloComputador):
     """
     Recebe o tabuleiro e o simbolo (X ou O) do computador e determina onde o computador deve jogar
@@ -132,67 +171,24 @@ def jogadaComputador(tabuleiro, simboloComputador):
     Estratégia:
     Explique aqui, de forma resumida, a sua estratégia usada para o computador vencer o jogador
     """
-    simboloJogador = "X" if simboloComputador=="O" else "O"
-
-    vaga = posicaoVaga(tabuleiro)
-
-    if len(vaga) == 9: return random.choice([5, 1, 7, 9])
-    elif len(vaga) == 8:
-        if 5 in vaga: return 5
-        elif 1 in vaga: return 1
-        else: return 7
-    elif tabuleiro[1] == simboloComputador and tabuleiro[2] == simboloComputador and 3 in vaga: return 3
-    elif tabuleiro[1] == simboloComputador and tabuleiro[3] == simboloComputador and 2 in vaga: return 2
-    elif tabuleiro[2] == simboloComputador and tabuleiro[3] == simboloComputador and 1 in vaga: return 1
-    elif tabuleiro[4] == simboloComputador and tabuleiro[5] == simboloComputador and 6 in vaga: return 6
-    elif tabuleiro[4] == simboloComputador and tabuleiro[6] == simboloComputador and 5 in vaga: return 5
-    elif tabuleiro[5] == simboloComputador and tabuleiro[6] == simboloComputador and 4 in vaga: return 4
-    elif tabuleiro[7] == simboloComputador and tabuleiro[8] == simboloComputador and 9 in vaga: return 9
-    elif tabuleiro[7] == simboloComputador and tabuleiro[9] == simboloComputador and 8 in vaga: return 8
-    elif tabuleiro[8] == simboloComputador and tabuleiro[9] == simboloComputador and 7 in vaga: return 7
-    elif tabuleiro[1] == simboloComputador and tabuleiro[4] == simboloComputador and 7 in vaga: return 7
-    elif tabuleiro[1] == simboloComputador and tabuleiro[7] == simboloComputador and 4 in vaga: return 4
-    elif tabuleiro[4] == simboloComputador and tabuleiro[7] == simboloComputador and 1 in vaga: return 1
-    elif tabuleiro[2] == simboloComputador and tabuleiro[5] == simboloComputador and 8 in vaga: return 8
-    elif tabuleiro[2] == simboloComputador and tabuleiro[8] == simboloComputador and 5 in vaga: return 5
-    elif tabuleiro[5] == simboloComputador and tabuleiro[8] == simboloComputador and 2 in vaga: return 2
-    elif tabuleiro[3] == simboloComputador and tabuleiro[6] == simboloComputador and 9 in vaga: return 9
-    elif tabuleiro[3] == simboloComputador and tabuleiro[9] == simboloComputador and 6 in vaga: return 6
-    elif tabuleiro[6] == simboloComputador and tabuleiro[9] == simboloComputador and 3 in vaga: return 3
-    elif tabuleiro[1] == simboloComputador and tabuleiro[5] == simboloComputador and 9 in vaga: return 9
-    elif tabuleiro[1] == simboloComputador and tabuleiro[9] == simboloComputador and 5 in vaga: return 5
-    elif tabuleiro[5] == simboloComputador and tabuleiro[9] == simboloComputador and 1 in vaga: return 1
-    elif tabuleiro[3] == simboloComputador and tabuleiro[5] == simboloComputador and 7 in vaga: return 7
-    elif tabuleiro[3] == simboloComputador and tabuleiro[7] == simboloComputador and 5 in vaga: return 5
-    elif tabuleiro[7] == simboloComputador and tabuleiro[5] == simboloComputador and 3 in vaga: return 3
-
-
-    elif tabuleiro[1] == simboloJogador and tabuleiro[2] == simboloJogador and 3 in vaga: return 3
-    elif tabuleiro[1] == simboloJogador and tabuleiro[3] == simboloJogador and 2 in vaga: return 2
-    elif tabuleiro[2] == simboloJogador and tabuleiro[3] == simboloJogador and 1 in vaga: return 1
-    elif tabuleiro[4] == simboloJogador and tabuleiro[5] == simboloJogador and 6 in vaga: return 6
-    elif tabuleiro[4] == simboloJogador and tabuleiro[6] == simboloJogador and 5 in vaga: return 5
-    elif tabuleiro[5] == simboloJogador and tabuleiro[6] == simboloJogador and 4 in vaga: return 4
-    elif tabuleiro[7] == simboloJogador and tabuleiro[8] == simboloJogador and 9 in vaga: return 9
-    elif tabuleiro[7] == simboloJogador and tabuleiro[9] == simboloJogador and 8 in vaga: return 8
-    elif tabuleiro[8] == simboloJogador and tabuleiro[9] == simboloJogador and 7 in vaga: return 7
-    elif tabuleiro[1] == simboloJogador and tabuleiro[4] == simboloJogador and 7 in vaga: return 7
-    elif tabuleiro[1] == simboloJogador and tabuleiro[7] == simboloJogador and 4 in vaga: return 4
-    elif tabuleiro[4] == simboloJogador and tabuleiro[7] == simboloJogador and 1 in vaga: return 1
-    elif tabuleiro[2] == simboloJogador and tabuleiro[5] == simboloJogador and 8 in vaga: return 8
-    elif tabuleiro[2] == simboloJogador and tabuleiro[8] == simboloJogador and 5 in vaga: return 5
-    elif tabuleiro[5] == simboloJogador and tabuleiro[8] == simboloJogador and 2 in vaga: return 2
-    elif tabuleiro[3] == simboloJogador and tabuleiro[6] == simboloJogador and 9 in vaga: return 9
-    elif tabuleiro[3] == simboloJogador and tabuleiro[9] == simboloJogador and 6 in vaga: return 6
-    elif tabuleiro[6] == simboloJogador and tabuleiro[9] == simboloJogador and 3 in vaga: return 3
-    elif tabuleiro[1] == simboloJogador and tabuleiro[5] == simboloJogador and 9 in vaga: return 9
-    elif tabuleiro[1] == simboloJogador and tabuleiro[9] == simboloJogador and 5 in vaga: return 5
-    elif tabuleiro[5] == simboloJogador and tabuleiro[9] == simboloJogador and 1 in vaga: return 1
-    elif tabuleiro[3] == simboloJogador and tabuleiro[5] == simboloJogador and 7 in vaga: return 7
-    elif tabuleiro[3] == simboloJogador and tabuleiro[7] == simboloJogador and 5 in vaga: return 5
-    elif tabuleiro[7] == simboloJogador and tabuleiro[5] == simboloJogador and 3 in vaga: return 3
     
-    return posicaoLivre(tabuleiro)
+
+    l = posicaoVaga(tabuleiro)
+    if len(l) == 9: return random.choice([1, 7, 9, 3])
+
+    melhorPont = -1000
+    melhorJog = 0
+
+    for i in l:
+        tabuleiro[i] = simboloComputador
+        PosAtual = minimax(tabuleiro[:], 0, False, simboloComputador)
+        tabuleiro[i] = " "
+        if PosAtual >= melhorPont:
+            melhorPont = PosAtual
+            melhorJog = i
+    return melhorJog 
+
+
 
 ###################################################################################
 #(9) Faça uma função que será responsável pelas jogadas, intercalando entre o     # 
@@ -223,6 +219,7 @@ def jogadas(tabuleiro, vez, simboloJogador, simboloComputador):
     if vez:
         imprimeTab(tabuleiro)
         jogada = solicitaJogada(tabuleiro)
+        #jogada = jogadaComputador(tabuleiro, simboloJogador)
         tabuleiro[jogada] = simboloJogador
         vez = False
     elif not vez:
